@@ -31,6 +31,11 @@ class BTvertex:
 # Runtime: O(n)
 def calculate_sizes(v):
     # Your code goes here
+    if v is None:
+        return 0
+    else:
+        v.size = calculate_sizes(v.left) + 1 + calculate_sizes(v.right)
+        return v.size
     pass
 
 #
@@ -42,6 +47,19 @@ def calculate_sizes(v):
 # Output: A BTvertex that, if removed from the tree, would result
 # ... in disjoint trees that all have at most n/2 vertices
 # Runtime: O(h)
-def find_vertex(r): 
+def find_vertex(r):
     # Your code goes here
+    if r is not None:
+        n = r.size
+
+    while r is not None:
+        if r.left is not None and r.right is not None:
+            if r.left.size <= n/2 and r.right.size <= n/2:
+                return r
+        elif r.left is not None and r.right is None:
+            r = r.left
+        elif r.left is None and r.right is not None:
+            r = r.right
+        else:
+            return r
     pass
