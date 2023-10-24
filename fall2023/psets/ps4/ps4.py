@@ -32,11 +32,63 @@ returns: An key-value pair (Kj, Vj) such that Kj is an i’th smallest key.
 
 def QuickSelect(arr, i):
     # Your code here
+    if len(arr) <= 1: 
+        return arr[0]
+    else:
+        p = get_random_index(arr)
+        pivot = arr[p][0]
+        a_less = []
+        a_more = []
+        a_equal = []
+        for element in arr:
+            if element[0] < pivot:
+                a_less.append(element)
+            elif element[0] > pivot:
+                a_more.append(element)
+            else:
+                a_equal.append(element)
+        
+        if i < len(a_less):
+            return QuickSelect(a_less, i)
+        elif i >= len(a_less) + len(a_equal):
+            return QuickSelect(a_more, i - len(a_less) - len(a_equal))
+        else:
+            return a_equal[0]
+
+def MedianOfThreeQuickSelect(arr, i):
+    # Your code here
+    if len(arr) <= 1: 
+        return arr[0]
+    else:
+        p1 = get_random_index(arr)
+        p2 = get_random_index(arr)
+        p3 = get_random_index(arr)
+        potential_pivots = [p1, p2, p3]
+        potential_pivots.sort()
+        pivot = arr[potential_pivots[1]][0]
+        a_less = []
+        a_more = []
+        a_equal = []
+        for element in arr:
+            if element[0] < pivot:
+                a_less.append(element)
+            elif element[0] > pivot:
+                a_more.append(element)
+            else:
+                a_equal.append(element)
+        
+        if i < len(a_less):
+            return MedianOfThreeQuickSelect(a_less, i)
+        elif i >= len(a_less) + len(a_equal):
+            return MedianOfThreeQuickSelect(a_more, i - len(a_less) - len(a_equal))
+        else:
+            return a_equal[0]
 
     # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
     # ... see the helper functions below
-    pass
-    return (0, -1)
+    # pass
+    # return (0, -1)
+
 
 
 '''
@@ -54,8 +106,14 @@ NOTE: This is different from the QuickSelect definition. This function takes in 
 def MergeSortSelect(arr, query_list):
     # Only call MergeSort once
     # ... MergeSort has already been implemented for you (see below)
-    pass
-    return [(0, -1)] * len(query_list)  # replace this line with your return
+    sorted = MergeSort(arr)
+
+    results = []
+
+    for query in query_list:
+        results.append(sorted[query])
+
+    return results
 
 
 ##################################
@@ -67,7 +125,7 @@ def MergeSortSelect(arr, query_list):
 
 def experiments():
     # Edit this parameter
-    k = [1, 1, 1, 1, 1]
+    k = [22, 24, 26, 28, 30, 32, 34]
 
     # Feel free to edit these initial parameters
 
@@ -125,6 +183,20 @@ def experiments():
                 k_record.append(ki)
                 ms_record.append(seconds * 1000)  # Convert seconds to milliseconds
                 algorithm_record.append("MergeSort")
+            
+            # MedianOfThreeQuickSelect Runs
+            for _ in range(RUNS):
+                # Record Time Taken to Solve All Queries
+                start_time = time.time()
+                for q in queries:
+                    # Copy dataset just to be safe
+                    MedianOfThreeQuickSelect(dataset_size_n.copy(), q)
+                seconds = time.time() - start_time
+                # Record this trial run
+                n_record.append(ni)
+                k_record.append(ki)
+                ms_record.append(seconds * 1000)  # Convert seconds to milliseconds
+                algorithm_record.append("MedianOfThreeQuickSelect")
 
             # Print progress
             iter += 1
