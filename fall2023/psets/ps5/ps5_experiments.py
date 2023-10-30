@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from ps5_helpers import timeout, color, generate_line_of_ring_subgraphs, generate_random_linked_cluster, COLORS
-from ps5_solution import Graph, exhaustive_search_coloring, bfs_2_coloring, iset_bfs_3_coloring
+from ps5 import Graph, exhaustive_search_coloring, bfs_2_coloring, iset_bfs_3_coloring
 random.seed(120)
 
 ##################################
@@ -35,14 +35,17 @@ random.seed(120)
 '''
 
 # The timeout length in seconds
-TIMEOUT_LENGTH = 10
+TIMEOUT_LENGTH = 2
 
 def benchmark():
     # You may experiment with these parameters if you wish!
     # Each of these ranges is formatted with a minimum, maximum, and step size.
+    # subgraph_line_parameter_range = (3,10,1) 
     subgraph_line_parameter_range = (100, 300, 100)
+    # 3, 10, 1
     cluster_graph_p_parameter_range = (0.2, 0.95, 0.15)
     cluster_graph_cluster_size_parameter_range = (2, 26, 8)
+    # 8 16 2
     cluster_graph_cluster_quantity_parameter_range = (2, 5, 1)
 
     algs = [("Exhaustive Coloring", lambda g: exhaustive_search_coloring(g)),
