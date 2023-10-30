@@ -129,9 +129,39 @@ def bfs_2_coloring(G, precolored_nodes=None):
     
     # TODO: Complete this function by implementing two-coloring using the colors 0 and 1.
     # If there is no valid coloring, reset all the colors to None using G.reset_colors()
+    queue = list()
+
+    for node in range(G.N):
+        if node in visited:
+            pass
+        else:
+            G.colors[node] = 0
+            visited.add(node)
+            queue.append(node)
+
+            while len(queue) != 0:
+                current_node = queue.pop(0)
+                current_color = G.colors[current_node]
+                neighbor_color = (current_color + 1) % 2
+
+                for neighbor in G.edges[current_node]:
+                    if G.colors[neighbor] == current_color:
+                        G.reset_colors()
+                        return None
+                    elif neighbor not in visited:
+                        # set neighbor color
+                        G.colors[neighbor] = neighbor_color
+
+                        # add to visited queue
+                        visited.add(neighbor)
+                        queue.append(neighbor)
+                    else:
+                        pass
     
-    G.reset_colors()
-    return None
+    return G.colors
+    
+    # G.reset_colors()
+    # return None
 
 '''
     Part B: Implement is_independent_set.
@@ -141,7 +171,10 @@ def bfs_2_coloring(G, precolored_nodes=None):
 # Checks if subset is an independent set in G 
 def is_independent_set(G, subset):
     # TODO: Complete this function
-
+    for i in range(len(subset)):
+        for node in subset[0:i]:
+            if node in G.edges[subset[i]]:
+                return False
     return True
 
 '''
@@ -169,7 +202,20 @@ def is_independent_set(G, subset):
 # If no coloring is possible, resets all of G's colors to None and returns None.
 def iset_bfs_3_coloring(G):
     # TODO: Complete this function.
+    test_size = 1
+    while test_size <= G.N // 3 + 1:
+        for iset in combinations(range(G.N), test_size):
+            if is_independent_set(G, iset):
+                two_coloring = bfs_2_coloring(G, iset)
 
+                if two_coloring is not None:
+                    for node in range(G.N):
+                        if G.colors[node] is None:
+                            G.colors[node] = 2
+                    return G.colors
+        test_size += 1
+
+    # no coloring is possible, resets all of G's colors to None and returns None.
     G.reset_colors()
     return None
 
