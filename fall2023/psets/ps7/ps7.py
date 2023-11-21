@@ -191,6 +191,19 @@ def sat_3_coloring(G):
     solver = Glucose3()
 
     # TODO: Add the clauses to the solver
+    for v in range(G.N):
+        solver.add_clause([-(3*v + 1), -(3*v + 2)])
+        solver.add_clause([-(3*v + 2), -(3*v + 3)])
+        solver.add_clause([-(3*v + 1), -(3*v + 3)])
+
+        solver.add_clause([3*v+1, 3*v+2, 3*v+3])
+
+        for j in G.edges[v]:
+            solver.add_clause([-(3*v + 1), -(3*j + 1)])
+            solver.add_clause([-(3*v + 2), -(3*j + 2)])
+            solver.add_clause([-(3*v + 3), -(3*j + 3)])
+
+    
 
     # Attempt to solve, return None if no solution possible
     if not solver.solve():
@@ -201,6 +214,12 @@ def sat_3_coloring(G):
     solution = solver.get_model()
 
     # TODO: If a solution is found, convert it into a coloring and update G.colors
+    for v in range(G.N):
+        colors = [0,1,2]
+        for color in colors:
+            if 3*v + color + 1 in solution:
+                G.colors[v] = color
+                break
 
     return G.colors
 
